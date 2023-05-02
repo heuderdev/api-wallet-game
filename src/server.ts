@@ -28,7 +28,7 @@ io.on('connection', (socket: any) => {
     console.log("ID: ", socket.id);
     
     socket.join(socket.id)
-    socket.on("/user", ({ email }) => {
+    socket.on("/user", email => {
         console.log(email);
         socket.join(email)
     })

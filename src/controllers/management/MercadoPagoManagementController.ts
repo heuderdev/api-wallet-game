@@ -5,8 +5,7 @@ export class MercadoPagoManagementController {
     static async CREDITO_MERCADO_PAGO(request: Request, response: Response) {
         try {
             const content = await MercadoPagoDatabaseManagement.VIEW_CREDITO_MERCADO_PAGO();
-            // @ts-ignore
-            console.log(content);      
+            // @ts-ignore    
             return response.json(content)
         } catch (error) {
             response.json(error)

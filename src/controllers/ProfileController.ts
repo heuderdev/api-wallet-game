@@ -50,6 +50,8 @@ class ProfileController {
         const balance = Number(request.body.balance)
         const content = await TransactionDatabase.DatabaseMethodCreation(request.user.content.sub, balance)
         const new_array = await TransactionDatabase.DatabaseMethodGetAll(request.user.content.email!)
+        console.log("controller:ProfileController::Store_deposit", request.user.content.email);
+        
         request.io.sockets.in(request.user.content.email).emit('new-deposit', { new_array })
         return response.json(content)
     }
