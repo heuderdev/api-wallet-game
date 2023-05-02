@@ -28,6 +28,8 @@ declare global {
             }
 
             io: any
+
+            socketUser: any
         }
     }
 }

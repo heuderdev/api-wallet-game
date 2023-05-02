@@ -22,14 +22,19 @@ const io = new Server(serverHttp, {
     }
 });
 
+interface ss {
+    data: {
+        email: string,
+        socket: string
+    }
+}
 
 
 io.on('connection', (socket: any) => {
     console.log("ID: ", socket.id);
-    
+
     socket.join(socket.id)
     socket.on("/user", email => {
-        console.log(email);
         socket.join(email)
     })
 
@@ -39,6 +44,9 @@ io.on('connection', (socket: any) => {
 
 
 })
+
+
+
 
 app.use((request: Request, response: Response, next: NextFunction) => {
     request.io = io

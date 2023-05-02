@@ -11,6 +11,7 @@ import { validateResource } from "../middleware/validateResource"
 import { ExceptionProfileStoreDepositValidation } from "../validations/ExceptionProfileStoreDepositValidation"
 import { ExceptionProfileStoreValidation } from "../validations/ExceptionProfileStoreValidation"
 import { MercadoPagoManagementController } from "../controllers/management/MercadoPagoManagementController"
+import { VerifyPagamentoPerdidoMercadoPago } from "../controllers/management/VerifyPagamentoPerdidoMercadoPago"
 
 const route = express()
 
@@ -52,5 +53,6 @@ route.get("/api/management/withdraw/:id",  WithDrawManagementController.getBayId
 route.patch("/api/management/withdraw/:id",  WithDrawManagementController.update)
 
 route.get("/prejuizo", MercadoPagoManagementController.CREDITO_MERCADO_PAGO)
+route.get("/pagamento", VerifyPagamentoPerdidoMercadoPago.pagamento)
 
 export { route }
