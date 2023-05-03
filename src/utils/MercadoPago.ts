@@ -41,7 +41,6 @@ export class MercadoPagoUtils {
 
     static async GetPayment(mercadopago_id: number): Promise<IMP | unknown | any> {
         try {
-
             const content = await mercadopago.payment.findById(mercadopago_id) as IMP
             return content;
         } catch (error) {

@@ -26,14 +26,18 @@ export class WebhookDatabase {
         // BUSCAR O REGISTRO NA TABLE MERCADOPAGOS REFERÊNTE AO ID QUE VEIO DA REQUEST DO MERCADO PAGO WEBHOOK
         const _info_mercado_pago = await this.InternalFunctionMercadoPagoGetTransactionId(id)
 
-        const MP = await MercadoPagoUtils.GetPayment(Number(id)) as IMP
+        const MP = await MercadoPagoUtils.GetPayment(Number(id)) as IMP        
 
         if (_info_mercado_pago?.m_status === "approved") return
 
         try {
             switch (action) {
                 case "payment.updated":
-                    if (MP.response.status_detail === "expired") {
+                    if (MP.response?.status_detail === "expired") {
+
+                        if(_info_mercado_pago?.m_status === "cancelled") {
+                            return "Essa transação já foi cancelada!"
+                        }
 
                         const mercadopago_update = await prisma.mercadoPago.update({
                             where: {
@@ -41,22 +45,24 @@ export class WebhookDatabase {
                             },
                             data: {
                                 m_action: "updated",
-                                m_status: MP.response.status,
-                                m_status_detail: MP.response.status_detail,
-                                m_net_received_amount: MP.response.transaction_details.net_received_amount,
-                                m_transaction_id: MP.response.transaction_details.transaction_id ?? "NULL"
+                                m_status: MP.response?.status,
+                                m_status_detail: MP.response?.status_detail,
+                                m_net_received_amount: MP.response?.transaction_details.net_received_amount,
+                                m_transaction_id: MP.response?.transaction_details.transaction_id ?? "NULL"
                             }
                         })
 
-                        await prisma.transaction.update({
+                        const transaction_update = await prisma.transaction.update({
                             where: {
                                 id: mercadopago_update.transaction_id
                             },
                             data: {
-                                mercado_pago_transaction_status: MP.response.status
+                                mercado_pago_transaction_status: MP.response?.status
                             }
                         })
-
+                        console.log( { mercadopago_update, transaction_update });
+                        
+                        return { mercadopago_update, transaction_update }
                     } else {
                         // ATUALIZAR AS INFORMAÇÕES DA TABLE MERCADOPAGO
                         // - m_action

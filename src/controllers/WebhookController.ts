@@ -27,8 +27,10 @@ export class WebhookController {
 
     static async webhook(request: CustomRequest<IWebHook>, response: Response, next: NextFunction) {
         try {
+            console.log(request.body.data);
+            
             const content = await WebhookDatabase.WebHook(request.body.data.id, request.body.action);
-            return response.json({ "MethodPayment": true })
+            return response.json({ "MethodPayment": true, content })
         } catch (error) {
             console.log(error);
             return response.json(error)
